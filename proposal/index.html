@@ -1,0 +1,74 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body {
+            background-color: white;
+            padding: 100px;
+            width: 1000px;
+            margin: auto;
+            text-align: left;
+            font-weight: 300;
+            font-family: 'Open Sans', sans-serif;
+            color: #121212;
+        }
+  
+        h1, h2, h3, h4 {
+            font-family: 'Source Sans Pro', sans-serif;
+        }
+  
+        kbd {
+            color: #121212;
+        }
+      div.padded {  
+        padding-top: 0px;  
+        padding-right: 100px;  
+        padding-bottom: 0.25in;  
+        padding-left: 100px;  
+      }  
+    </style> 
+	<title>Gravity Particle Simulator</title>
+</head>
+<body>
+	<h1 align="middle">Gravity Particle Simulator</h1>
+	<h2>Summary:</h2>
+	<p>Our team aims to create a gravity particle simulator that will simulate the interactions of particles in a gravitational field. The simulator will be able to visualize the particles and their trajectories in 3D space. This project will allow us to learn more about the physics of gravitational interactions and improve our understanding of simulation techniques.</p>
+	<h2>Team Members:</h2>
+	<ul>
+		<li>Alex Jean, ajean757</li>
+		<li>Ryan Kee, rkee</li>
+		<li>Kevyn Ramirez, Kevyn0304</li>
+		<li>Amit Bhandal, welcomecurry</li>
+	</ul>
+	<h2>Problem Description:</h2>
+	<p>The interaction of particles in a gravitational field is an important concept in physics, and the ability to simulate this interaction can help us understand and visualize these complex systems. However, the simulation of particles in a gravitational field is challenging due to the complex nature of the equations involved. Our project aims to solve this problem by developing a gravity particle simulator that can accurately simulate the interactions of particles in a gravitational field.</p>
+	<h2>Goals and Deliverables:</h2>
+	<p>Our baseline plan is to create a gravity particle simulator that can simulate the interactions of particles in a gravitational field in real-time. The simulator will allow the user to change parameters such as the number of particles, the strength of the gravitational field, and the initial positions and velocities of the particles. The simulator will also be able to visualize the particles and their trajectories in 3D space.</p>
+	<p>If we are ahead of schedule, our aspirational plan is to add additional features to the simulator, such as collision detection and handling, and the ability to export simulation data for further analysis. We also hope to optimize the simulator's performance to handle a larger number of particles. Another idea we had was to include light simulation, where we could specify certain particles to illuminate light and light up the scene. Then we could specify the material and BSDF of each particle to properly simulate how each particle reflects/refracts the light.</p>
+	<p>One optimization idea we could do is to use the Barnes-Hut algorithm to reduce the computational complexity of simulating N-bodies from O(N^2) to O(NlogN). This would reduce the number of force computations by grouping particles into an octree.</p>
+	<p>To measure the quality and performance of our system, we will create graphs showing the speedup and accuracy of our simulation compared to existing simulation techniques. We will also evaluate the visual quality of our simulation and compare it to real-world observations.</p>
+	<p>Questions we plan to answer with our analysis include:</p>
+	<ul>
+		<li>How accurately can our simulator model the interactions of particles in a gravitational field?</li>
+		<li>How does the performance of our simulator compare to existing simulation techniques?</li>
+		<li>What are the limitations of our simulator and how can we improve its accuracy and performance?</li>
+	</ul>
+	<h2>Schedule:</h2>
+	<ul>
+		<li>Week 1: Research and understand the physics and math involved in gravitational interactions.</li>
+		<li>Week 2: Develop the basic structure of the simulator, including particle generation and initialization.</li>
+		<li>Week 3: Implement the gravitational interaction between particles and the visualization of particle trajectories.</li>
+		<li>Week 4: Refine the simulation and add additional features such as collision detection as well as handle and optimize the performance of the simulator and prepare for presentation.</li>
+	</ul>
+	<h2>Resources:</h2>
+	<ul>
+		<li>C++ </li>
+		<li>OpenGL </li>
+	</ul>
+
+
+</body>
+</html>
+

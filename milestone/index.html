@@ -1,0 +1,60 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body {
+            background-color: white;
+            padding: 100px;
+            width: 1000px;
+            margin: auto;
+            text-align: left;
+            font-weight: 300;
+            font-family: 'Open Sans', sans-serif;
+            color: #121212;
+        }
+  
+        h1, h2, h3, h4 {
+            font-family: 'Source Sans Pro', sans-serif;
+        }
+  
+        kbd {
+            color: #121212;
+        }
+      div.padded {  
+        padding-top: 0px;  
+        padding-right: 100px;  
+        padding-bottom: 0.25in;  
+        padding-left: 100px;  
+      }  
+    </style> 
+	<title>Gravity Particle Simulator</title>
+</head>
+<body>
+	<h1 align="middle">Gravity Particle Simulator Milestone</h1>
+	<h3 align="middle"><a href="">Video</a></h3>
+	<h3 align="middle"><a href="">Slides</a></h3>
+	<h2>Summary:</h2>
+	<p>Up until this first project checkpoint, our team focused on getting a good foundation setup for project. After experimenting with Unreal Engine a little bit we decided that the learning curve was too high for the limited amount of time we have, especially since we would have to build the project from scratch. Instead, we decided to base our project off the basic structure of Project 4: Cloth Simulator.</p>
+	<h2>What we have achieved so far:</h2>
+	<p>We decided to use Cloth Sim as a skeleton and base for our N-Body Sim because we wanted to make use of the camera, GUI, and renderer methods. Our first objective was to understand the Cloth Sim pipeline and GUI / program initialization so we could clone a skeleton version of it. This involved reading clothSimulator.h/cpp and main.cpp to understand how the GUI, renderer, and camera were initialized and being used. Once we had a general understanding, we created a new CMAKE project and copied over the code for any relevant methods, removing unused parameters and objects. Currently, we’re using the default Cloth Sim GUI, but we plan on changing it to make it relevant to our project. </p>
+	<p>We also had to do a bit of digging into CMakeLists.txt in order to enable the project to be properly compiled. We ran into many compilation errors due to linker issues, this took some time to understand what was going on, but it turned out we forgot to add new files to the CMakeLists.txt file. </p>
+	<p>After we got our project to compile, our next objective was to render a few spheres. In Cloth Sim, we don’t render any point masses, only the wireframe that’s attached to each Spring. After doing some digging, we found a sphere rendering method, SphereMesh::draw_sphere(), which would render a sphere of specified position and size with a shader applied to it. This was perfect for our project, so we created a new Particle class that would call this method when Particle::render(GLShader) was called on it. This allowed us to successfully render a few particles on the GUI. </p>
+	<p>The next thing we worked on (and are currently working on) was implementing numerical integration to update the positions of the particles. For now, we are computing the net force on each particle using a naive O(N^2) algorithm based on Newton's law of universal gravitation, but we will update this later on to adopt the Barnes-Hut algorithm (an algorithm which stores particles in an octree). Once we computed the net force on each particle, we are experimenting with a few different numerical integration methods. Firstly, we tried Euler's method, and so far this has yielded the most realistic results although particles will start diverging away into infinity due to the numerical unstability of Euler's method. We also have tried Verlet integration like in Cloth Simulator but we haven't been able to create realistic results yet. We also still plan on possibly experimenting with other numerical integration methods such as Runge-Kutta and Leapfrog integration.</p>
+	<h2>Things left to do:</h2>
+	<p>The first thing that we will do between now and the final deliverable is to fix and finalize our numerical integration method. We will first select a specific integration method to use after experimenting with our different options discussed above, and then refine things like the constants involved to create a more realistic simulation. One particular issue we encountered trying to model a "Solar system-like" simulation was that the "planets" all would just go towards the "sun" instead of orbiting around it. This is because all of the particles had no tangential initial velocity, so we plan to implement a feature that allows us to specify initial velocities for each particle.</p>
+	<p>The main optimization we plan on implementing to reduce runtime computations is the Barnes-Hut algorithm. The idea behind this algorithm is that we can organize all of the particles into "clusters" in an octree. If during a gravitational force computation, the distance between two particles is sufficiently far, then it is a good enough approximation to treat a cluster as a single particle with mass equal to the sum of the particles in it. Otherwise, if it is not sufficiently far then we can keep recursing into that cluster. This algorithm is quite elegant and we are quite excited to implement this part.</p>
+	<p>If we have extra time and are feeling extra gung-ho, we might try to implement collisions between particles. After all, stars in real life when they collide don't just phase through each other. This could lead to a lot of interesting simulations for example simulating two galaxies colliding, but might be pretty complicating.</p>
+	<h2>Resources used:</h2>
+	<ul>
+		<li>Project 4: Cloth simulator</li>
+		<li>CGL vector library</li>
+		<li>NanoGUI</li>
+		<li><a href="https://arxiv.org/pdf/1105.1082.pdf">"N-body simulations of gravitational dynamics"</a></li>
+	</ul>
+
+
+</body>
+</html>
+
