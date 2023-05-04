@@ -57,7 +57,7 @@
     <h2 align="middle">Abstract</h3>
 
     <p>
-      In the 17th century, Sir Issac Newton, in an attempt to study the orbits of the planets in our solar system, discovered that his equations of motion weren't able to accurately predict the orbits of our celestial bodies. He discovered that gravitational forces between all the planets would influence their orbits, and thus the n-body problem was born. The n-body problem is an interesting and complex topic that can be used to study the dynamics of heavenly bodies as well as other particle interactions. We were inspired by this problem to create a simulator that models the interaction of particles in space under the influence of gravitational forces. 
+      In the 17th century, Sir Isaac Newton, in an attempt to study the orbits of the planets in our solar system, discovered that his equations of motion weren't able to accurately predict the orbits of our celestial bodies. He discovered that gravitational forces between all the planets would influence their orbits, and thus the n-body problem was born. The n-body problem is an interesting and complex topic that can be used to study the dynamics of heavenly bodies as well as other particle interactions. We were inspired by this problem to create a simulator that models the interaction of particles in space under the influence of gravitational forces. 
     </p>
    
 
@@ -78,71 +78,42 @@
       After we got our project to compile, our next objective was to render a few spheres. In Cloth Sim, we don't render any point masses, only the wireframe that's attached to each Spring. For our purposes, we wanted to render particles as spheres, so we used SphereMesh::draw_sphere(), which would render a sphere of specified position and size with a shader applied to it. This ended up being perfect for our use case, so we created a new Particle class that would call this method when Particle::render(GLShader) was called on it. This allowed us to successfully render a few particles on the GUI. 
     </p>
 
-    <h3 align="middle">Building off of Cloth Sim</h3>
+    <h3 align="middle">Simulation: Newton's Laws and Integration Methods</h3>
+    <p>
+      In each step of our simulate method, we compute the forces on each particle and then update the position and velocity for every particle.
+      Interactions between particles in space are determined by Newton's Law of Universal Gravitation, which states: 
+      <div style="text-align:center">
+        $F = G \dfrac{m_1 m_2}{r^2}$
+      </div>
+      Each particle interacts with every other particle, so if we have $N$ particles, we would have to perform $N(N-1)$ calculations. This works for a small number of particles, but we would need to implement a more effecient solution later.
+    </p>
+    <p>
+      When updating the positions of the particles, we used numerical integration to estimate the position and velocity at the next timestep. Initially, we used Forward Euler, a first-order, explicit numerical integrator, to test if our system could run with a few particles. The Forward Euler update rule is defined as such: 
+      <div style="text-align:center">
+        $x_{t+1} = x_t + v_t \Delta t$ <br>
+        $v_{t+1} = v_t + a_t \Delta t$
+      </div>
+      However, this led to our particles exhibiting very unstable behavior, and it was especially noticible when the particles would have large accelerations from getting too close to massive particles or after a short period of time, all particles would fly off to infinity. This was to be expected, as Forward Euler is numerically unstable, leading to catastrophic errors building up over time. Upon doing further research we found and referenced a paper called "N-Body simulations of gravitational dynamics" - Walter Dehnen and Justin I. Read, where they discussed different integration methods. We chose "Kick-Drift-Kick" Leapfrog Integration, which is second order 
+    </p>
+    <h3 align="middle">Improving Performance: Barnes-Hut</h3>
     <p>
       TODO
     </p>
 
-    <h3 align="middle">Barnes-Hut</h3>
-    <p>
-      TODO
-    </p>
-
-    <h3 align="middle">Building off of Cloth Sim</h3>
+    <h3 align="middle">Improving Usability: Particle Generation and GUI</h3>
     <p>
       TODO
     </p>
 
 
-    <h3 align="middle">Shaders</h3>
+    <h3 align="middle">Improving Visuals: Shaders</h3>
       <p>
-      During our research, we wanted to find different rendering models compared to those we've seen in lecture. T
-      his is how we stumbled upon the Cook-Torrance model.
-    </p>
-
-    <p>Timeline:</p>
-    <ul>
-        <li>Researched about N-Body simulations</li>
-        <li>Gravitational forces and general physics around it</li>
-        <li>Integration methods: Euler, Verlet, Runge-Kutta</li>
-        <li>Euler is numerically unstable, so we need to choose another method</li>
-        <li>Acceleration Structures: Barnes-Hut, CUDA</li>
-        <li>Read code for clothsim and ported it over to a new cmake project, removing most cloth files and keeping only files for simulation and GUI</li>
-        <li>Refactor point masses and spheres into particles</li>
-    </ul>
-    <p>Algorithms implemented:</p>
-    
-    <p>- Barnes-Hut algorithm: Used to reduce the computational complexity of simulating N-bodies from O(N^2) to O(NlogN) by grouping particles into an octree. The algorithm involves computing the mass distribution and center of mass for each node in the tree, and calculating the force for each node.</p>
-
-    <p>Techniques used:</p>
-    
-    <p>- OpenGL: Used to visualize the particles and their trajectories in 3D space.<br>
-    - NanoGUI: Used as the library for the GUI.</p>
-    
-    <p>Unique decisions:</p>
-    
-    <p>- Light simulation: Potentially include light simulation, where we could specify certain particles to illuminate light and light up the scene, such as a central star. Then we could specify the material and BSDF of each particle to properly simulate how each particle reflects/refracts the light.</p>
-    
-    <p>Problems encountered and tackled:</p>
-    
-    <p>- Refining the simulation and optimizing the performance of the simulator: We will tackle this by refining the simulation and optimizing the performance of the simulator.</p>
-    <br />
-    <p>Things we Learned:</p>
-    <ul>
-      <li>Destructors, memory heap works, and magic numbers in C++</li>
-      <li>CMAKE and OpenGL</li>
-      <li>Noise-generating for shaders</li>
-      <li>Realistic physical simulations are hard!</li>
-    </ul>  
-
-    <p>Future Possible Additions:</p>
-    <ul>
-      <li>Particle collisions</li>
-      <li>Threading to speedup algorithm</li>
-      <li>GPU acceleration</li>
-      <li>Velocity constraints</li>
-      <li>Change of colors for Planet shaders</li>
-    </ul>  
+        During our research, we wanted to find different rendering models compared to those we've seen in lecture. 
+        This is how we stumbled upon the Cook-Torrance model. The Cook-Torrance model is a microfacet model used
+        for simulating the appearnce of rough surfaces. It uses a combination of the surface roughness and the surface
+        reflectance to calculate its appearance. It is widely used to simulate metals, plastics, and ceramics, but 
+        we thought it would be itneresting to try to implement.
+      </p>
 
 
     <h2 align="middle">Results</h3>
