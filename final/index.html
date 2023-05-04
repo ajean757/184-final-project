@@ -2,67 +2,104 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
 <style>
-	  body {
-		  background-color: white;
-		  padding: 100px;
-		  width: 1000px;
-		  margin: auto;
-		  text-align: left;
-		  font-weight: 300;
-		  font-family: 'Open Sans', sans-serif;
-		  color: #121212;
-	  }
-
-	  h1, h2, h3, h4 {
-		  font-family: 'Source Sans Pro', sans-serif;
-	  }
-
-	  kbd {
-		  color: #121212;
-	  }
-    div.padded {  
-      padding-top: 0px;  
-      padding-right: 100px;  
-      padding-bottom: 0.25in;  
-      padding-left: 100px;  
-    }  
-  </style> 
-<title>Final Project |  CS 184</title>
+  body {
+    background-color: white;
+    padding: 100px;
+    width: 1000px;
+    margin: auto;
+    text-align: left;
+    font-weight: 300;
+    font-family: 'Open Sans', sans-serif;
+    color: #121212;
+  }
+  h1, h2, h3, h4 {
+    font-family: 'Source Sans Pro', sans-serif;
+  }
+  kbd {
+    color: #121212;
+  }
+</style>
+<title>CS 184 | Final Project</title>
 <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-<link rel="stylesheet" type="text/css" href="style.css" media="screen" />
+<link href="https://fonts.googleapis.com/css?family=Open+Sans|Source+Sans+Pro" rel="stylesheet">
+
+<script>
+  MathJax = {
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']]
+    }
+  };
+</script>
+<script id="MathJax-script" async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js">
+</script>
+
 </head>
+
 <body>
-  <br />
-  <h1 align="middle">Gravitational N-Body Simulator</h1>
+  <h1 align="middle">CS 184: Computer Graphics and Imaging, Spring 2023</h1>
+  <h1 align="middle">Final Project: Gravitational N-Body Simulator</h1>
 
   <h2 align="middle">Alex Jean, Ryan Kee, Kevyn Ramirez, Amit</h2>
 
+  <div align="center">
+    <table style="width=100%">
+        <tr>
+            <td align="middle">
+            <img src="images/nbodyintro.gif" width="480px" />
+        </tr>
+    </table>
+  </div>
 
   <div class="padded">
 
 
-    <h3 align="middle">Abstract</h3>
+    <h2 align="middle">Abstract</h3>
 
     <p>
-        Our team created a gravity particle simulator that will simulates the interactions of particles in a gravitational field. The simulator visualizes the particles and their trajectories in 3D space. In this project we reasearched the physics of gravitational interactions and improve our understanding of simulation techniques.
-        The simulator allows the user to change parameters such as the number of particles, the strength of the gravitational field, and the initial positions and velocities of the particles. The simulator also visualizes the particles and their trajectories in 3D space.
+      In the 17th century, Sir Issac Newton, in an attempt to study the orbits of the planets in our solar system, discovered that his equations of motion weren't able to accurately predict the orbits of our celestial bodies. He discovered that gravitational forces between all the planets would influence their orbits, and thus the n-body problem was born. The n-body problem is an interesting and complex topic that can be used to study the dynamics of heavenly bodies as well as other particle interactions. We were inspired by this problem to create a simulator that models the interaction of particles in space under the influence of gravitational forces. 
     </p>
    
 
 
-    <h3 align="middle">Technical Approach</h3>
-        
-    <p>Our technical approach involves developing a gravity particle simulator that accurately simulates the interactions of particles in a gravitational field. We decided to use Cloth Sim as a skeleton and base for our N-Body Sim because we wanted to make use of the camera, GUI, and renderer methods. To improve the accuracy and performance of the simulator, we will use the Barnes-Hut algorithm, which reduces the computational complexity of simulating N-bodies from O(N^2) to O(NlogN) by grouping particles into an octree.</p>
-    <p>Our first objective was to understand the Cloth Sim pipeline and GUI / program initialization so we could clone a skeleton version of it. This involved reading clothSimulator.h/cpp and main.cpp to understand how the GUI, renderer, and camera were initialized and being used. Once we had a general understanding, we created a new CMAKE project and copied over the code for any relevant methods, removing unused parameters and objects. Currently, we’re using the default Cloth Sim GUI, but we plan on changing it to make it relevant to our project. 
-        <br>
-        <br>
-        We also had to do a bit of digging into CMakeLists.txt in order to enable the project to be properly compiled. We ran into many compilation errors due to linker issues, this took some time to understand what was going on, but it turned out we forgot to add new files to the CMakeLists.txt file. 
-        <br>
-        <br>
-        After we got our project to compile, our next objective was to render a few spheres. In Cloth Sim, we don’t render any point masses, only the wireframe that’s attached to each Spring. After doing some digging, we found a sphere rendering method, SphereMesh::draw_sphere(), which would render a sphere of specified position and size with a shader applied to it. This was perfect for our project, so we created a new Particle class that would call this method when Particle::render(GLShader) was called on it. This allowed us to successfully render a few particles on the GUI. 
-        <br>
-        <br>
+    <h2 align="middle">Technical Approach</h3>
+
+    <h3 align="middle">Overview</h3>
+
+    <p>
+      Our technical approach involves developing a gravity particle simulator that accurately simulates the interactions of particles in a gravitational field. We decided to use Cloth Sim as a skeleton and general architecture for our N-Body Sim because we wanted to make use of the camera, GUI, and renderer methods. To improve the performance when simulating a large number of particles, we used the Barnes-Hut algorithm, which reduces the computational complexity of simulating N-bodies from $O(N^2)$ to $O(N\log{N})$ by grouping particles into an octree. We also added a few new shaders to add visual flair to our particles and improved upon the GUI to add features that allow for dynamically creating different particle configurations, setting simulation speeds, and swapping shaders. 
     </p>
+
+    <h3 align="middle">Building off of Cloth Sim</h3>
+
+    <p>
+      Our first objective was to understand the Cloth Sim pipeline and GUI / program initialization so we could clone a skeleton version of it. This involved reading clothSimulator.h/cpp and main.cpp to understand how the GUI, renderer, and camera were initialized and being used. Once we had a general understanding, we created a new CMAKE project and copied over the code for any relevant methods, removing unused parameters and objects. 
+        
+      After we got our project to compile, our next objective was to render a few spheres. In Cloth Sim, we don't render any point masses, only the wireframe that's attached to each Spring. For our purposes, we wanted to render particles as spheres, so we used SphereMesh::draw_sphere(), which would render a sphere of specified position and size with a shader applied to it. This ended up being perfect for our use case, so we created a new Particle class that would call this method when Particle::render(GLShader) was called on it. This allowed us to successfully render a few particles on the GUI. 
+    </p>
+
+    <h3 align="middle">Building off of Cloth Sim</h3>
+    <p>
+      TODO
+    </p>
+
+    <h3 align="middle">Barnes-Hut</h3>
+    <p>
+      TODO
+    </p>
+
+    <h3 align="middle">Building off of Cloth Sim</h3>
+    <p>
+      TODO
+    </p>
+
+
+    <h3 align="middle">Shaders</h3>
+      <p>
+      During our research, we wanted to find different rendering models compared to those we've seen in lecture. T
+      his is how we stumbled upon the Cook-Torrance model.
+    </p>
+
     <p>Timeline:</p>
     <ul>
         <li>Researched about N-Body simulations</li>
@@ -108,7 +145,7 @@
     </ul>  
 
 
-    <h3 align="middle">Results</h3>
+    <h2 align="middle">Results</h3>
     <div style="display: flex; margin: 1rem">
       <div>
         <iframe width="420" height="315" src="https://youtu.be/7bQ3N_84FF0"> </iframe>
@@ -135,7 +172,7 @@
         </p>
       </div>
     </div>
-    <h3 align="middle">References</h3>
+    <h2 align="middle">References</h3>
     <ul>
         <li>C++</li>
         <li>OpenGL</li>
@@ -149,15 +186,19 @@
         <li>Simulation Methods: <a href="https://www.cs.cmu.edu/afs/cs/academic/class/15850c-s96/www/nbody.html#pp">https://www.cs.cmu.edu/afs/cs/academic/class/15850c-s96/www/nbody.html#pp</a></li>
         <li><a href="https://arxiv.org/abs/1105.1082">https://arxiv.org/abs/1105.1082</a></li>
         <li>Parallel Computing: <a href="https://www.cs.unc.edu/~prins/Classes/633/Slides/09-smm4.pdf">https://www.cs.unc.edu/~prins/Classes/633/Slides/09-smm4.pdf</a></li>
+        <li><a href="https://graphicscompendium.com/gamedev/15-pbr">Physically-Based Rendering Cook-Torrance Reflectance Model</a></li>
+        <li><a href="http://www.codinglabs.net/article_physically_based_rendering_cook_torrance.aspx">Physically Based Rendering - Cook-Torrance</a></li>
+        <li><a href="http://obermuhlner.ch/wordpress/2014/09/01/using-glsl-shaders-to-generate-planets/">Eric Obermühlner - Using GLSL Shaders to generate Planets</a></li>
+        <li><a href="https://github.com/ashima/webgl-noise/blob/master/src/noise2D.glsl">GLSL Noise Function</a></li>
     </ul>
     
-    <h3 align="middle">Contributions</h3>
+    <h2 align="middle">Contributions</h3>
     <p>
       <ul>
         <li>Alex Jean - </li>
-        <li>Amit Bhandal - Absolutely Nothing</li>
-        <li>Kevyn Ramirez - </li>
         <li>Ryan Kee - </li>
+        <li>Kevyn Ramirez - </li>
+        <li>Amit Bhandal - Absolutely Nothing</li>
     </ul>
     </p>
 
