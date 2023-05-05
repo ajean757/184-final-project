@@ -61,7 +61,7 @@
   </div>
 
   <div align="center">
-      <iframe width="640" height="360" src="https://www.youtube.com/embed/ER7Q1TAIzmc"> </iframe>
+      <iframe width="640" height="360" src="https://www.youtube.com/embed/ER7Q1TAIzmc" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe> 
   </div>
   
   <div class="padded">
@@ -145,11 +145,18 @@
 
     <h3 align="middle">Improving Usability: Particle Generation and GUI</h3>
     <p>
-      Once the simulation logic was implemented, we wanted an easy way to create interesting simulations. For example, we have simulations for a single galaxy, two galaxies colliding, a particle cloud with no central star, and more. Each simulation has a button in the GUI that you can click to switch between. To start playing the simulation press 'P' and press 'P' again to pause it. To restart the simulation or update any changed configurations, press 'R'. There is also a button that toggles a feature to randomize the masses of the particles
+      Once the simulation logic was implemented, we wanted an easy way to create interesting simulations. For example, we have simulations for a single galaxy, two galaxies colliding, a particle cloud with no central star, and more. Each simulation has a button in the GUI that you can click to switch between. To start playing the simulation press 'P' and press 'P' again to pause it. To restart the simulation or update any changed configurations, press 'R'. There is also a button that toggles a feature to randomize the masses of the particles. Just like Cloth Sim, there's also a way to change the shaders applied to the spheres. There's also a button to speed up the simulation. 
     </p>
     <p>
-      Initially, we actually struggled with creating "space-like" simulations because of the fact that when a simulation starts, particles would simply be attracted directly towards the center star instead of orbiting it. To address this, we gave each particle an initial tangential velocity, and this was sufficient to allow particles to orbit in a more realistic fashion.
+      When we're generating particles, we use the sampler.cpp class from Pathtracer, specifically UniformSphereSampler. This function allows us to generate a uniform distribution of particles with various configurations. For example, by default we only use the $x, y$ components and vary the $z$ component to be some random constant between -2 and 2. We can easily multiply the output from the sampler by a constant to achieve any max radial distance we desire. If we want to create a tilted galaxy, we can project the sampled point onto a plane that intersects the sphere. We can do this simply by defining a point on the plane $P$ to be the center of the sampled sphere, and defining the normal of the plane to be some arbitrary unit vector $\hat{n}$. We can then use a the ray-plane intersection to project the sampled point on the surface of the sphere directly onto the plane using its $\hat{n}$. We used a combination of these methods to create different "star systems". 
     </p>
+    <p>
+      Initially, we actually struggled with creating "space-like" simulations because of the fact that when a simulation starts, particles would simply be attracted directly towards the center star instead of orbiting it. To address this, we gave each particle an initial tangential velocity, and this was sufficient to allow particles to orbit in a more realistic fashion. We calculated the tangential velocities by performing the following calculations. We define the center star to be position $\vec{p_0}$ and mass $M$ and each particle has a position $\vec{p}$ and mass $m$. The galactic plane is defined to have a unit normal $\hat{n}$, for a non tilted system, the galacic normal is $(0, 1, 0)$. The tangential velocity direction $\vec{v_t} = (\vec{p} - \vec{p_0}) \times n$. The magnitude of velocity uses the centripetal acceleration formula $a_c = v_t^2 / r$, where $a_c = GM / r^2$, solving for $v_t$ gives $\vec{v_t} = \sqrt{\dfrac{GM}{r}} \hat{v_t}$. 
+    </p>
+    <p>
+      We also multiply all initial velocities with a dampening factor $10^{-4}$ which was chosen based off experimentation to prevent masses from accelerating too fast out of orbit. This was also necessary because the distances between our particles were very small compared to their masses, which meant we had to scale up the distances when performing force calculations, and dampen inital velocities. While this simply the easiest solution, its possible to define an optimization problem or machine learning algorithm to determine good inital values in such a way that the particles don't accelerate too quickly and immediately get flung out of orbit. This would be something we could expand upon in the future.
+    </p>
+    
 
     <h3 align="middle">Improving Visuals: Shaders</h3>
     <h4>Cook-Torrance</h4>
