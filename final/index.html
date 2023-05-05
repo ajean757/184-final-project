@@ -90,7 +90,7 @@
         <div style="text-align:center">
           $F = G \dfrac{m_1 m_2}{r^2}$
         </div>
-        Each particle interacts with every other particle, so if we have $N$ particles, we would have to perform $N(N-1)$ calculations. This works for a small number of particles, but we would need to implement a more effecient solution later.
+        Each particle interacts with every other particle, so if we have $N$ particles, we would have to perform $N(N-1)$ calculations. This works for a small number of particles, but we would need to implement a more efficient solution later.
       </p>
       <p>
         When updating the positions of the particles, we used numerical integration to estimate the position and velocity at the next timestep. Initially, we used Forward Euler, a first-order, explicit numerical integrator, to test if our system could run with a few particles. The Forward Euler update rule is defined as such:
@@ -112,12 +112,42 @@
       </p>
       <h3 align="middle">Improving Performance: Barnes-Hut</h3>
       <p>
-        TODO
+        In order to compute the net force on each particle, we initially ran a quadratic algorithm to compute the pairwise force between all the particles. As one might imagine, for large number of particles (1000+) our simulation begins to significantly slow down. The primary optimization approach we took was to adopt the Barnes-Hut algorithm. This algorithm allowed us to reduce the runtime to compute forces on the particles from $O(N^2)$ to $O(NlogN)$. There are two phases to this algorithm: (1) building the octree out of the particles, and (2) computing the forces on each particle using the octree. We will refer to the octree in Barnes-Hut as a BHTree from now on.
       </p>
+      <p>
+        In a BHTree, only the external nodes contain either a single particle or no particles. The internal nodes on the other hand contain no particles but store the center of mass as well as the total mass of all the particles contained within its subtree. When computing the net force on a particle, if the center of mass of the octant the particle is sufficiently far, then we approximate all of the particles in that octant as a single particle such that its total mass is equal to the sum of all the masses of the particles in it. Below is the condition that determines whether or not the center of mass of an octant is sufficiently far:
+      </p>
+      <div style="text-align:center">
+        $d > L / \theta + \delta$ <br>
+      </div>
+      <p>Where $d$ is the distance between the particle and the center of mass of the octant, $L$ is the length of the diagonal of the octant's bounding box, $\delta$ is the distance between the octant's geometric center and the its center of mass. Finally, $\theta$ is a parameter we chose that essentially dictates the "leniency" of the approximation. Low $\theta$ values increase the accuracy of the force computations but slow the algorithm down ($\theta = 0$ is equivalent to naive), and high $\theta$ values decrease the accuracy of the force computations but speed up the algorithm (more approximations occur). After some tuning, we decided to use $\theta = 0.7$.</p>
+      <div align="center">
+        <img src="images/bh_bounding_boxes.png" width="400px" />
+        <figcaption>Visualization of BHTree</figcaption>
+      </div>
+      <p>Below are some runtime statistics displaying how Barnes-Hut outperforms Naive solution for large number of particles. Computer specs:</p>
+      <ul>
+        <li>CPU: AMD Ryzen 5600x</li>
+        <li>RAM: 32 GB</li>
+        <li>GPU: NVIDIA Geforce RTX 3070</li>
+      </ul>
+      <div align="center">
+        <table style="width=100%">
+          <tr>
+            <img src="images/bh_runtime_data.png" width="350px" />
+          </tr>
+          <tr>
+            <img src="images/bh_runtime_graph.png" width="450px" />
+          </tr>
+        </table>
+      </div>
 
       <h3 align="middle">Improving Usability: Particle Generation and GUI</h3>
       <p>
-        TODO
+        Once the simulation logic was implemented, we wanted an easy way to create interesting simulations. For example, we have simulations for a single galaxy, two galaxies colliding, a particle cloud with no central star, and more. Each simulation has a button in the GUI that you can click to switch between. To start playing the simulation press 'P' and press 'P' again to pause it. To restart the simulation or update any changed configurations, press 'R'. There is also a button that toggles a feature to randomize the masses of the particles
+      </p>
+      <p>
+        Initially, we actually struggled with creating "space-like" simulations because of the fact that when a simulation starts, particles would simply be attracted directly towards the center star instead of orbiting it. To address this, we gave each particle an initial tangential velocity, and this was sufficient to allow particles to orbit in a more realistic fashion.
       </p>
 
 
