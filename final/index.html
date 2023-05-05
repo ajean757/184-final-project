@@ -107,7 +107,7 @@
         $x_{t+1} = x_t + v_{t+{1/2}} \Delta t$, <br />
         $v_{t+1} = v_{t+{1/2}} + a_{t+1} \dfrac{\Delta t}{2} $
       </div>
-      KDK Leapfrog computes the updates by using the midpoint velocity to compute the update to the next timestep's position and velocity. This means the velocities are "staggered" with respect to our positions. A special property of leapfrog integration is it's time reversibility, which means we can reverse the velocities and timestep to arrive at an exact solution of a previous timestep. Other integrators such as Euler or Runge-Kutta are only able to arrive at approximate solutions. This time reversibility garauntees conservation of energy over at each timestep when a fixed timestep is used, which allows means our simulation will remain numerically stable over time. 
+      KDK Leapfrog computes the updates by using the midpoint velocity to compute the update to the next timestep's position and velocity. This means the velocities are "staggered" with respect to our positions. A special property of leapfrog integration is it's time reversibility, which means we can reverse the velocities and timestep to arrive at an exact solution of a previous timestep. Other integrators such as Euler or Runge-Kutta are only able to arrive at approximate solutions. This time reversibility guarantees conservation of energy over at each timestep when a fixed timestep is used, which allows means our simulation will remain numerically stable over time. 
       <div style="text-align:center">
         <img src="images/kdkleapfrog.PNG" width="480px" />
         <figcaption align="middle">Diagram showing the "leapfrogging" timestep. Figure from "Leapfrog Integration"</figcaption>
@@ -184,8 +184,8 @@
       $f_r = s f_{lambert} +  (1-s) f_{cook-torrance}$
     </div>
     <p>
-      The diffuse component is the same as that of the Phong model: $f_{lambert} = (I/r^2) max(0, n \cdot l) u_{color}$,
-      $u_{color}$, which is the color chosen from the GUI, acting as the diffuse coefficient. The specular component, however,
+      The diffuse component is the same as that of the Phong model: $f_{lambert} = (I/r^2) max(0, n \cdot l) $u_{color}$,
+      which is the color chosen from the GUI, acting as the diffuse coefficient. The specular component, however,
       has the following function as its specular coefficient:
     </p>
     <div style="text-align:center">
@@ -224,7 +224,7 @@
       $F_0 = \frac{(n - 1)^2}{(n + 1)^2}$
     </div>
     <p>
-      Here $F{0}$ is the reflectance at normal incidence, and $n$ is the material's index of refraction. We chose an arbitrary
+      Here $F_0$ is the reflectance at normal incidence, and $n$ is the material's index of refraction. We chose an arbitrary
       $n$ of $n = 1.2$.
     </p>
     <h4>Planet Shaders</h4>
