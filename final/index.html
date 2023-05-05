@@ -62,6 +62,8 @@
 
   <div align="center">
       <iframe width="640" height="360" src="https://www.youtube.com/embed/ER7Q1TAIzmc" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe> 
+      <figcaption align="middle">Final Project Video, showcasing our best results, explaining implementation details, and demonstrating GUI</figcaption>
+
   </div>
   
   <div class="padded">
@@ -145,7 +147,7 @@
 
     <h3 align="middle">Improving Usability: Particle Generation and GUI</h3>
     <p>
-      Once the simulation logic was implemented, we wanted an easy way to create interesting simulations. For example, we have simulations for a single galaxy, two galaxies colliding, a particle cloud with no central star, and more. Each simulation has a button in the GUI that you can click to switch between. To start playing the simulation press 'P' and press 'P' again to pause it. To restart the simulation or update any changed configurations, press 'R'. There is also a button that toggles a feature to randomize the masses of the particles. Just like Cloth Sim, there's also a way to change the shaders applied to the spheres. There's also a button to speed up the simulation. 
+      Once the simulation logic was implemented, we wanted an easy way to create interesting simulations. For example, we have simulations for a single galaxy, two galaxies colliding, a particle cloud with no central star, and more. Each simulation has a button in the GUI that you can click to switch between. To start playing the simulation press 'P' and press 'P' again to pause it. To restart the simulation or update any changed configurations, press 'R'. There is also a button that toggles a feature to randomize the masses of the particles. Just like Cloth Sim, there's also a way to change the shaders applied to the spheres. There's also a slider to speed up the simulation by multiply the timestep $\Delta t$ by a factor from $0.0$ to $100.0$. 
     </p>
     <p>
       When we're generating particles, we use the sampler.cpp class from Pathtracer, specifically UniformSphereSampler. This function allows us to generate a uniform distribution of particles with various configurations. For example, by default we only use the $x, y$ components and vary the $z$ component to be some random constant between -2 and 2. We can easily multiply the output from the sampler by a constant to achieve any max radial distance we desire. If we want to create a tilted galaxy, we can project the sampled point onto a plane that intersects the sphere. We can do this simply by defining a point on the plane $P$ to be the center of the sampled sphere, and defining the normal of the plane to be some arbitrary unit vector $\hat{n}$. We can then use a the ray-plane intersection to project the sampled point on the surface of the sphere directly onto the plane using its $\hat{n}$. We used a combination of these methods to create different "star systems". 
@@ -235,6 +237,18 @@
       at random.
     </p>
 
+    <h3 align="middle">Lessons Learned</h3>
+    <p>
+      Overall, this project was a very fun and rewarding experience. We learned a lot more details about CMAKE and OpenGL such as compiling projects and dependencies and deepened our understanding of the OpenGL pipeline. We also learned a lot more about the N-body problem and its different applications by reading research papers of various applications and techniques. We learned about the Barnes Hut algorithm and worked with an octree for the first time. When creating shaders, we learned new methods that weren't covered in class, such as random noise generation. Most importantly, we learned that realistic physical simulations are hard! 
+    </p>
+    <p>
+      There were many issues that we encountered, such as incorrect mass and distance ratios that would cause our simulation to have undesired behavior. We focused more on using Newton's laws to produce nice looking results, as we based our mass ratios off of the Sun to Earth masses, and scaled our distances and dampened velocities so that they would look good. In reality, celestial bodies have a huge range of masses and the distances between them are truly astronomical. The time scales are also impossible to simulate in "real time", otherwise we'd have to wait a year for an Earth-like mass to orbit around a Sun-like star. Futhermore, many realistic galatic simulations must take into account the effects of dark matter and general relativity. Additionally, other simulations that we've researched seem to render hundreds of thousands of particles as pixels, whereas we rendered them as spheres. Because of our rendering method, we weren't able to render over a couple hundred particles without experience serious slowdowns. However, if we wanted to simulate a large number of particles, we had a solution for this: render a few thousand particles with laggy simulation footage, and use frame interpolation to speed it up in post production (this was done in Adobe Premiere Pro). We used this method to produce the cinematic at the beginning of the final video. 
+    </p>
+    <p>
+      Despite all this, we believe we had successfully implemented an N-body simulation that models the behavior of celestial bodies. We set out with a goal to produce semi-realistic behavior of colliding galaxies in space, and our simulation works well for up to a few hundred particles, and we used our frame interpolation method to create cool visuals.
+    </p>
+
+
     <h2 align="middle">Results</h2>
     
     <div class="videos">
@@ -263,10 +277,10 @@
     <h2 align="middle"> Contributions</h2>
     <p>
       <ul>
-        <li>Alex Jean - </li>
+        <li>Alex Jean: Alex created the skeleton for this project by cloning the Cloth Sim project, fixing the CMAKE configurations, and creating the basis to build all other code off of. He implemented the Particle class to render particles onto the GUI. He also researched into n-body simulations, looking into different applications of it, researched numerical integration methods such as Euler, Runge-Kutta, Verlet, and Leapfrog, researched potential optimizations such as CUDA and threading, and optimizations to the Barnes-Hut algorithm. Alex contributed significantly to the code, working on every new class (nBodySimulator.cpp, particle.cpp, system.cpp, bhTree.cpp); specifically, he created the new GUI elements, created the different galaxy configurations, helped write Barnes Hut with Ryan, built the Barnes Hut visualizer, and added many quality of life features. He also recorded, edited, and produced all video content. Alex was responsible for leading the project, defining objectives, planning meetings, and contributed significantly to every deliverable.</li>
         <li>Ryan Kee - </li>
         <li>Kevyn Ramirez - </li>
-        <li>Amit Bhandal - Absolutely Nothing</li>
+        <li>Amit Bhandal: Amit found some youtube videos in the initial planning stages, and suggested copying them. He contributed to our proposal by using ChatGPT, so we had to rewrite it. He also attempted to contribute to the final writeup by copying and pasting content from our Google Doc plan, but failed to put it in the correct repository, we had to fix this and rewrite all the content. While Amit did show up to a few of our group meetings, his contributions consisted mostly of finding Youtube videos and asking us to copy them. For the majority of the project, he was completely absent and unresponsive.</li>
       </ul>
     </p>
 
